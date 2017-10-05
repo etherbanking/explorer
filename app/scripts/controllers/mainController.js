@@ -170,17 +170,21 @@ angular.module('ethExplorer')
 
 
         function getHashrate()	{
-          $.getJSON("https://etherchain.org/api/miningEstimator", function(json) {
+            var hashrate = web3.eth.hashrate;
+            $scope.hashrate = hashrate;
+          /*$.getJSON("https://etherchain.org/api/miningEstimator", function(json) {
             var hr = json.data[0].hashRate;
             $scope.hashrate = hr;
-       	});
+       	});*/
       }
 
         function getETHRates() {
-          $.getJSON("https://coinmarketcap-nexuist.rhcloud.com/api/eth/price", function(json) {
+            $scope.ethprice = "$ 0.93";
+
+            /*$.getJSON("https://coinmarketcap-nexuist.rhcloud.com/api/eth/price", function(json) {
             var price = json.usd;
             $scope.ethprice = "$" + price.toFixed(2);
-          });
+          });*/
 
           $.getJSON("https://coinmarketcap-nexuist.rhcloud.com/api/eth/price", function(json) {
             var btcprice = json.btc;
@@ -232,9 +236,11 @@ angular.module('filters', []).
       }).
   filter('diffFormat', function () {
     return function (diffi) {
+
+
       if (isNaN(diffi)) return diffi;
-      var n = diffi / 1000000000000;
-      return n.toFixed(3) + " T";
+      var n = diffi / 1000000;
+      return n.toFixed(2) + " MH";
     };
   }).
   filter('stylize', function () {

@@ -45,7 +45,7 @@ angular.module('ethExplorer')
 	                        newDate.setTime(blockNewest.timestamp*1000);
 	                        $scope.time = newDate.toUTCString();
 
-	                        $scope.secondsSinceBlock1 = blockNewest.timestamp - 1438226773;
+	                        $scope.secondsSinceBlock1 = blockNewest.timestamp - 1506276923;
 	                        $scope.daysSinceBlock1 = ($scope.secondsSinceBlock1 / 86400).toFixed(2);
 
 	                        // Average Block Times:

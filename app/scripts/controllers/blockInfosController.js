@@ -39,8 +39,8 @@ angular.module('ethExplorer')
                     $scope.gasLimit = result.gasLimit;
                     $scope.gasUsed = result.gasUsed;
                     $scope.nonce = result.nonce;
-                    var diff = ("" + result.difficulty).replace(/['"]+/g, '') / 1000000000000;
-                    $scope.difficulty = diff.toFixed(3) + " T";
+                    var diff = ("" + result.difficulty).replace(/['"]+/g, '') / 1000000;
+                    $scope.difficulty = diff.toFixed(2) + " MH";
                     $scope.gasLimit = new BigNumber(result.gasLimit).toFormat(0) + " m/s"; // that's a string
                     $scope.gasUsed = new BigNumber(result.gasUsed).toFormat(0) + " m/s";
                     $scope.nonce = result.nonce;
@@ -51,7 +51,7 @@ angular.module('ethExplorer')
                     $scope.blockNumber = result.number;
                     $scope.timestamp = new Date(result.timestamp * 1000).toUTCString();
                     $scope.extraData = result.extraData.slice(2);
-                    $scope.dataFromHex = hex2a(result.extraData.slice(2));
+                    $scope.dataFromHex = hex2a(result.extraData.slice(2)).replace(/[^\w\s]/gi, '_').replace(/^_*/g,'');
                     $scope.size = result.size;
                     $scope.firstBlock = false;
                     $scope.lastBlock = false;

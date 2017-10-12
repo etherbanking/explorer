@@ -1,17 +1,30 @@
 //var cryptoSocket = require('crypto-socket');
 var BigNumber = require('bignumber.js');
 angular.module('ethExplorer')
-    .controller('mainCtrl', function ($rootScope, $scope, $location) {
+    .controller('mainCtrl', function ($rootScope, $scope, $location, $interval) {
 
         // Display & update block list
-        getETHRates();
-        updateBlockList();
-        updateTXList();
-        updateStats();
-        getHashrate();
+        //getETHRates();
+         updateBlockList();
+         updateTXList();
+       //  updateStats();
+       // getHashrate();
 
-        web3.eth.filter("latest", function(error, result){
+
+        $interval(function(){
+            //getETHRates();
+            updateBlockList();
+            updateTXList();
+            //updateStats();
+           // getHashrate();
+           // $scope.$apply();
+        }, 5e4);
+
+
+        /*var filter = web3.eth.filter("latest", function(error, result){
+
           if (!error) {
+
             getETHRates();
             updateBlockList();
             updateTXList();
@@ -19,7 +32,7 @@ angular.module('ethExplorer')
             getHashrate();
             $scope.$apply();
           }
-        });
+        });*/
 
         $scope.processRequest= function(){
             var requestStr = $scope.ethRequest;
@@ -36,17 +49,17 @@ angular.module('ethExplorer')
 
                 var result =regexpTx.test(requestStr);
                 if (result===true){
-                    goToTxInfos(requestStr)
+                    goToTxInfos(requestStr);
                 }
                 else{
                     result = regexpAddr.test(requestStr.toLowerCase());
                     if (result===true){
-                        goToAddrInfos(requestStr.toLowerCase())
+                        goToAddrInfos(requestStr.toLowerCase());
                     }
                     else{
                         result = regexpBlock.test(requestStr);
                         if (result===true){
-                            goToBlockInfos(requestStr)
+                            goToBlockInfos(requestStr);
                         }
                         else{
                             console.log("nope");
@@ -119,6 +132,7 @@ angular.module('ethExplorer')
                   if(blockBefore!==undefined){
                   $scope.blocktime = blockNewest.timestamp - blockBefore.timestamp;
                   }
+                  /*
                   $scope.range1=100;
                   range = $scope.range1;
                   var blockPast = web3.eth.getBlock(Math.max($scope.blockNum - range,0));
@@ -149,6 +163,7 @@ angular.module('ethExplorer')
                   if(blockBefore!==undefined){
                   $scope.blocktimeAverageAll = ((blockNewest.timestamp - blockPast.timestamp)/range).toFixed(2);
                   }
+                  */
 
                   //fastAnswers($scope);
                   //$scope=BlockExplorerConstants($scope);
@@ -162,6 +177,7 @@ angular.module('ethExplorer')
           $scope.versionClient = web3.version.client;
           //$scope.versionNetwork = web3.version.network;
           $scope.versionCurrency = web3.version.ethereum; // TODO: change that to currencyname?
+
 
           // ready for the future:
           try { $scope.versionWhisper = web3.version.whisper; }
@@ -178,13 +194,14 @@ angular.module('ethExplorer')
        	});*/
       }
 
+
         function getETHRates() {
             $scope.ethprice = "$ 0.93";
 
             /*$.getJSON("https://coinmarketcap-nexuist.rhcloud.com/api/eth/price", function(json) {
             var price = json.usd;
             $scope.ethprice = "$" + price.toFixed(2);
-          });*/
+          });
 
           $.getJSON("https://coinmarketcap-nexuist.rhcloud.com/api/eth/price", function(json) {
             var btcprice = json.btc;
@@ -195,25 +212,86 @@ angular.module('ethExplorer')
             var cap = json.usd;
             //console.log("Current ETH Market Cap: " + cap);
             $scope.ethmarketcap = cap;
-          });
+          });*/
         }
 
         function updateTXList() {
             var currentTXnumber = web3.eth.blockNumber;
             $scope.txNumber = currentTXnumber;
             $scope.recenttransactions = [];
-            for (var i=0; i < 10 && currentTXnumber - i >= 0; i++) {
+            for (var i=0; i < 3 && currentTXnumber - i >= 0; i++) {
               $scope.recenttransactions.push(web3.eth.getTransactionFromBlock(currentTXnumber - i));
             }
+        }
+        function getBlockFromBlockNumber(tmpBlockNumber) {
+
+            var block = null;
+            if(tmpBlockNumber in  $scope.mapBlock){
+                return $scope.mapBlock[tmpBlockNumber];
+            }else {
+                var tmpBlock = web3.eth.getBlock(tmpBlockNumber);
+                $scope.mapBlock[tmpBlockNumber] = tmpBlock;
+                return tmpBlock;
+            }
+
+
         }
 
         function updateBlockList() {
             var currentBlockNumber = web3.eth.blockNumber;
             $scope.blockNumber = currentBlockNumber;
             $scope.blocks = [];
-            for (var i=0; i < 10 && currentBlockNumber - i >= 0; i++) {
-              $scope.blocks.push(web3.eth.getBlock(currentBlockNumber - i));
+            var blockNewest = null;
+            var blockBefore = null;
+            for (var i=0; i < 3 && currentBlockNumber - i >= 0; i++) {
+               if( i === 0){
+                   blockNewest = web3.eth.getBlock(currentBlockNumber);
+                   $scope.blocks.push(blockNewest);
+               } else if(i === 1){
+                   blockBefore = web3.eth.getBlock(currentBlockNumber- 1);
+                   $scope.blocks.push(blockBefore);
+               }
+               else{
+                   $scope.blocks.push(web3.eth.getBlock(currentBlockNumber - i));
+               }
+
             }
+
+
+            $scope.difficulty = blockNewest.difficulty;
+            $scope.difficultyToExponential = blockNewest.difficulty.toExponential(3);
+
+            $scope.totalDifficulty = blockNewest.totalDifficulty;
+            $scope.totalDifficultyToExponential = blockNewest.totalDifficulty.toExponential(3);
+
+            $scope.totalDifficultyDividedByDifficulty = $scope.totalDifficulty.dividedBy($scope.difficulty);
+            $scope.totalDifficultyDividedByDifficulty_formatted = $scope.totalDifficultyDividedByDifficulty.toFormat(1);
+
+            $scope.AltsheetsCoefficient = $scope.totalDifficultyDividedByDifficulty.dividedBy(currentBlockNumber);
+            $scope.AltsheetsCoefficient_formatted = $scope.AltsheetsCoefficient.toFormat(4);
+
+            // large numbers still printed nicely:
+            $scope.difficulty_formatted = $scope.difficulty.toFormat(0);
+            $scope.totalDifficulty_formatted = $scope.totalDifficulty.toFormat(0);
+
+            // Gas Limit
+            $scope.gasLimit = new BigNumber(blockNewest.gasLimit).toFormat(0) + " m/s";
+
+            // Time
+            var newDate = new Date();
+            newDate.setTime(blockNewest.timestamp*1000);
+            $scope.time = newDate.toUTCString();
+
+            $scope.secondsSinceBlock1 = blockNewest.timestamp - 1438226773;
+            $scope.daysSinceBlock1 = ($scope.secondsSinceBlock1 / 86400).toFixed(2);
+
+            // Average Block Times:
+            // TODO: make fully async, put below into 'fastInfosCtrl'
+
+            if(blockBefore!==undefined){
+                $scope.blocktime = blockNewest.timestamp - blockBefore.timestamp;
+            }
+
         }
 
     });

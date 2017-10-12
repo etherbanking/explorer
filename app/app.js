@@ -15,8 +15,9 @@ var geth_command	= "";
 
 angular.module('ethExplorer', ['ngRoute','ui.bootstrap','filters','ngSanitize'])
 
-.config(['$routeProvider',
-    function($routeProvider) {
+.config(['$routeProvider','$locationProvider',
+    function($routeProvider,$locationProvider) {
+       // $locationProvider.html5Mode(true);
         $routeProvider.
             when('/', {
                 templateUrl: 'views/main.html',
@@ -58,13 +59,13 @@ angular.module('ethExplorer', ['ngRoute','ui.bootstrap','filters','ngSanitize'])
                 redirectTo: '/'
             });
 
-            //$locationProvider.html5Mode(true);
+            $locationProvider.html5Mode(true);
     }])
     .run(function($rootScope) {
         var web3 = require('web3');
 
         // begin AltSheets changes
-        web3.setProvider(new web3.providers.HttpProvider("http://scan.ebc.io/rpc"));
+        web3.setProvider(new web3.providers.HttpProvider("https://scan.ebccoin.io/rpc"));
         // end AltSheets changes
 
         $rootScope.web3=web3;

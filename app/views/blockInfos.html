@@ -100,43 +100,42 @@
       <small>- contained in current block</small>
     </h2>
 
-    <div ng-repeat="tx in transactions">
-      <table class="table table-striped">
-          <tbody>
-          <tr>
-              <th colspan="2" style="text-align:left">Transaction #{{$index+1}}</th>
-          </tr>
-          <tr>
-              <td>Hash #</td>
-              <td><a href="./#/tx/{{tx.hash}}">{{tx.hash}}</a></td>
-          </tr>
-          <tr>
-              <td>From</td>
-              <td><a href="./#/address/{{tx.from}}">{{tx.from}}</a></td>
-          </tr>
-          <tr>
-              <td>To</td>
-              <td><a href="./#/address/{{tx.to}}">{{tx.to}}</a></td>
-          </tr>
-          <tr>
-             <td>Contract Address</td>
-             <td><a href="./#/address/{{tx.contractAddress}}">{{tx.contractAddress}}</a></td>
-         </tr>
-          <tr>
-              <td>Gas</td>
-              <td>{{tx.gas}}</td>
-          </tr>
-         <!-- <tr>
-              <td>Input</td>
-              <td><textarea style="min-width: 100%; background-color: #222; color: #08d410;">{{tx.input}}</textarea></td>
-          </tr>-->
-          <tr>
-              <td>Value</td>
-              <td>{{tx.value}} EBC</td>
-          </tr>
-          </tbody>
-      </table>
-      <hr>
-    </div>
+    <table class="table table-striped table-hover table-bordered">
+        <thead class="thead-inverse">
+        <td>Index</td>
+        <td>
+            <strong>TX Hash</strong>
+        </td>
+        <td>From</td>
+        <td>To
+        </td>
+        <td>
+            Gas Used
+        </td>
+        <td>
+            Value
+        </td>
+        <td>Contract Address</td>
+        </thead>
+        <tbody>
+        <tr ng-repeat="tx in transactions track by $index-async" class="animated fadeIn">
+            <td style="vertical-align:middle;">{{$index+1}}</td>
+            <td style="vertical-align:middle;"><a href="/#/tx/{{ tx.hash }}">{{ tx.hash || "" | truncate : 45 }}</a></td>
+            <td style="vertical-align:middle;"><a href="/#/address/{{ tx.from }}">{{ tx.from || "" | truncate : 20 }}</a></td>
+            <td style="vertical-align:middle;"><a href="/#/address/{{ tx.to }}">{{ tx.to || "" | truncate : 20 }}</a></td>
+            <td style="vertical-align:middle;">
+                {{ tx.gas | gasFormat }}
+            </td>
+            <td style="vertical-align:middle;">
+                {{ tx.value | BigNum }}
+            </td>
+            <td><a href="./#/address/{{tx.contractAddress}}">{{tx.contractAddress}}</a></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
+   
 
 </div>

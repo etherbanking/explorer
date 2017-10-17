@@ -120,7 +120,7 @@
         <tbody>
         <tr ng-repeat="tx in transactions track by $index-async" class="animated fadeIn">
             <td style="vertical-align:middle;">{{$index+1}}</td>
-            <td style="vertical-align:middle;"><a href="/#/tx/{{ tx.hash }}">{{ tx.hash || "" | truncate : 45 }}</a></td>
+            <td style="vertical-align:middle;"><a href="/#/tx/{{ tx.hash }}">{{ tx.hash || "" | truncate : 20 }}</a></td>
             <td style="vertical-align:middle;"><a href="/#/address/{{ tx.from }}">{{ tx.from || "" | truncate : 20 }}</a></td>
             <td style="vertical-align:middle;"><a href="/#/address/{{ tx.to }}">{{ tx.to || "" | truncate : 20 }}</a></td>
             <td style="vertical-align:middle;">
@@ -136,6 +136,6 @@
 
 
 
-   
+
 
 </div>

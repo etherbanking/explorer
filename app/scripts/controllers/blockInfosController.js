@@ -117,7 +117,7 @@ angular.module('ethExplorer')
                             to: receipt.to,
                             gas: receipt.gasUsed,
                             input: result.input.slice(2),
-                            value: web3.fromWei(result.value, "ether"),
+                            value: result.value,
                             contractAddress: receipt.contractAddress
                         }
                         $scope.$apply(

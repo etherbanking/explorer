@@ -104,28 +104,77 @@ angular.module('ethExplorer')
         $scope.transactions = []
 
         web3.eth.getBlockTransactionCount($scope.blockId, function(error, result){
-            var txCount = result;
-            $scope.numberOfTransactions = txCount;
-            for (var blockIdx = 0; blockIdx < txCount; blockIdx++) {
-                web3.eth.getTransactionFromBlock($scope.blockId, blockIdx, function(error, result) {
-	                // console.log("Result: ", result);
-                    web3.eth.getTransactionReceipt(result.hash, function(error, receipt) {
-                        var transaction = {
-                            id: receipt.transactionHash,
-                            hash: receipt.transactionHash,
-                            from: receipt.from,
-                            to: receipt.to,
-                            gas: receipt.gasUsed,
-                            input: result.input.slice(2),
-                            value: result.value,
-                            contractAddress: receipt.contractAddress
-                        }
-                        $scope.$apply(
-                            $scope.transactions.push(transaction)
-                        );
-                    });
-                })
+            if($scope.blockId == 0){
+
+                $scope.numberOfTransactions = 3;
+                var transaction = {
+                    id: "GENESIS_0xc22fa356a0c1c5b9073958495db7e836e581ac19",
+                    hash: "GENESIS_0xc22fa356a0c1c5b9073958495db7e836e581ac19",
+                    from: "GENESIS",
+                    to: "0xc22fa356a0c1c5b9073958495db7e836e581ac19",
+                    gas: 0,
+                    input: "OK",
+                    value: 1e+25,
+                    contractAddress: ""
+                }
+                $scope.$apply(
+                    $scope.transactions.push(transaction)
+                )
+                var transaction2 = {
+                    id: "GENESIS_0xa96e6618b7c97095c4c9fd8e247aaef647ef35cd",
+                    hash: "GENESIS_0xa96e6618b7c97095c4c9fd8e247aaef647ef35cd",
+                    from: "GENESIS",
+                    to: "0xa96e6618b7c97095c4c9fd8e247aaef647ef35cd",
+                    gas: 0,
+                    input: "OK",
+                    value: 1e+25,
+                    contractAddress: ""
+                }
+                $scope.$apply(
+                    $scope.transactions.push(transaction2)
+                )
+                var transaction3 = {
+                    id: "GENESIS_0xbf16be05a48cbfd8b1f10ec3bc70cdcf1e3c48a3",
+                    hash: "GENESIS_0xbf16be05a48cbfd8b1f10ec3bc70cdcf1e3c48a3",
+                    from: "GENESIS",
+                    to: "0xbf16be05a48cbfd8b1f10ec3bc70cdcf1e3c48a3",
+                    gas: 0,
+                    input: "OK",
+                    value: 1.2e+25,
+                    contractAddress: ""
+                }
+                $scope.$apply(
+                    $scope.transactions.push(transaction3)
+                )
+
+
+            }else{
+
+                var txCount = result;
+                $scope.numberOfTransactions = txCount;
+                for (var blockIdx = 0; blockIdx < txCount; blockIdx++) {
+                    web3.eth.getTransactionFromBlock($scope.blockId, blockIdx, function(error, result) {
+                        // console.log("Result: ", result);
+                        web3.eth.getTransactionReceipt(result.hash, function(error, receipt) {
+                            var transaction = {
+                                id: receipt.transactionHash,
+                                hash: receipt.transactionHash,
+                                from: receipt.from,
+                                to: receipt.to,
+                                gas: receipt.gasUsed,
+                                input: result.input.slice(2),
+                                value: result.value,
+                                contractAddress: receipt.contractAddress
+                            }
+                            $scope.$apply(
+                                $scope.transactions.push(transaction)
+                            );
+                        });
+                    })
+                }
             }
+
+
         });
 
 function hex2a(hexx) {

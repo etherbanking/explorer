@@ -357,6 +357,14 @@ angular.module('filters', []).
       return w.toFixed(8) + " EBC";
     };
   }).
+filter('BigNum1', function () {
+    return function (txt) {
+        if (isNaN(txt)) return txt;
+        var b = new BigNumber(txt);
+        var w = web3.fromWei(b, "ether");
+        return w.toFixed(0) + " EBC";
+    };
+}).
   filter('sizeFormat', function () {
     return function (size) {
       if (isNaN(size)) return size;

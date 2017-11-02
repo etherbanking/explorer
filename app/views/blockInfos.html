@@ -118,9 +118,10 @@
         <td>Contract Address</td>
         </thead>
         <tbody>
-        <tr ng-repeat="tx in transactions track by $index-async" class="animated fadeIn">
+        <
+        <tr ng-repeat="tx in transactions track by $index-async" class="animated fadeIn" ng-if ="blockNumber !=0 " >
             <td style="vertical-align:middle;">{{$index+1}}</td>
-            <td style="vertical-align:middle;"><a href="/#/tx/{{ tx.hash }}">{{ tx.hash || "" | truncate : 20 }}</a></td>
+            <td style="vertical-align:middle;"><a href= "/#/tx/{{ tx.hash }}">{{ tx.hash || "" | truncate : 20 }}</a></td>
             <td style="vertical-align:middle;"><a href="/#/address/{{ tx.from }}">{{ tx.from || "" | truncate : 20 }}</a></td>
             <td style="vertical-align:middle;"><a href="/#/address/{{ tx.to }}">{{ tx.to || "" | truncate : 20 }}</a></td>
             <td style="vertical-align:middle;">
@@ -131,6 +132,20 @@
             </td>
             <td><a href="./#/address/{{tx.contractAddress}}">{{tx.contractAddress}}</a></td>
         </tr>
+        <tr ng-repeat="tx in transactions track by $index-async" class="animated fadeIn" ng-if ="blockNumber == 0 " >
+            <td style="vertical-align:middle;">{{$index+1}}</td>
+            <td style="vertical-align:middle;">{{ tx.hash || "" | truncate : 20 }}</td>
+            <td style="vertical-align:middle;">{{ tx.from || "" | truncate : 20 }}</td>
+            <td style="vertical-align:middle;"><a href="/#/address/{{ tx.to }}">{{ tx.to || "" | truncate : 20 }}</a></td>
+            <td style="vertical-align:middle;">
+                {{ tx.gas | gasFormat }}
+            </td>
+            <td style="vertical-align:middle;">
+                {{ tx.value | BigNum1 }}
+            </td>
+            <td><a href="./#/address/{{tx.contractAddress}}">{{tx.contractAddress}}</a></td>
+        </tr>
+
         </tbody>
     </table>
 
